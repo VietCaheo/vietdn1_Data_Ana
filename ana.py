@@ -113,7 +113,7 @@ to check one by one and compute polular genres by year
     print("to see unique value list of genres ...\n")
     print(df.genres.unique())
     
-    df_action_exist= df[df['genres'].str.contains("Action")]
+    df_action_exist = df[df['genres'].str.contains("Action")]
     
     # How many every single genres appear
     release_count = []
@@ -216,7 +216,28 @@ def df_single_cast(df):
 def explore_question2(df, f_cast):
     """2. What kinds of properties are associated with movies that have high revenues?"""
     
-    # select properties to investigate impact to revenues are: `revenue_adj` `popularity` `budget_adj` `director` cast
+    # select properties to investigate impact to revenue_adj are: 'popularity' `vote_average` `budget_adj` f_cast or `director`
+
+    # build mean() by each target test-feature
+    print("\ncheck mean() of revenue_adj of each revenue_adj  ... \n")
+    print(df.describe().revenue_adj)
+
+    print("\ncheck mean() of revenue_adj of each vote_average  ... \n")
+    print(df.describe().vote_average)
+
+    print("\ncheck mean() of revenue_adj of each budget_adj  ... \n")
+    print(df.describe().budget_adj)
+
+    print("\nplot relationships between some feature vs revenue_adj ... \n")
+    df.plot(x='vote_average', y='revenue_adj', kind='scatter', color='red')
+    df.plot(x='budget_adj', y='revenue_adj', kind='scatter', color='green')
+    df.plot(x='popularity', y='revenue_adj', kind='scatter', color='blue')
+    plt.show()
+
+    # print("\nto see distribution of revenue_adj ... \n")
+    # df['revenue_adj'].plot()
+
+    # create a columns by "famous-index" = sum(index of most_actor20),
 
 
 
@@ -258,7 +279,9 @@ def main():
     df_cleaned.drop(['imdb_id', 'original_title', 'runtime', 'vote_count', 'revenue', 'budget'], axis=1, inplace=True)
     # print(df_cleaned.head(30))
     # overview again the df after more drops
-    overview_df(df_cleaned)
+    # overview_df(df_cleaned)
+
+    explore_question2(df_cleaned, famous_casts)
 
 
 if __name__ == "__main__":
