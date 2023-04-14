@@ -40,8 +40,6 @@ def overview_df(df):
     
     print("to see missing value by each column ... ")
     print(df.isnull().sum())
-
-    
     print("\n **********************end of see overview df ************************")
 
 
@@ -103,23 +101,24 @@ def df_single_genres(df):
     return gen_list_single
 
 
-def df_explore_byGenres(df, genres):
+def df_explore_bygenres(df, genres):
     """ Answer 02 questions 1: 
         1. Which genres are most popular from year to year?  
         by list of single genres
 to check one by one and compute polular genres by year
     """
-    #Question1:
+
+    # Question1:
     print("to investigate some columns with unique value ...\n")
     print("to see unique value list of genres ...\n")
     print(df.genres.unique())
     
     df_action_exist= df[df['genres'].str.contains("Action")]
     
-    #How many every single genres appear
+    # How many every single genres appear
     release_count = []
     for item in genres:
-        #print(f"to check this genres ...{item}   \n")
+        # print(f"to check this genres ...{item}   \n")
         # print(df[df['genres'].str.contains(item)].count())
         # print(df[df['genres'].str.contains(item)].shape[0])
         count = df[df['genres'].str.contains(item)].shape[0]
@@ -147,109 +146,119 @@ to check one by one and compute polular genres by year
     
     print("\n ***********************end of explore by genres ***********************")
 
+
 def df_single_cast(df):
-    """ Function to get the list actor name with at least 20 times apprearing on different movie.
-    The result actor list is sorted also as descrease from the most to 20.
-    """
-    
-    #target resutl list
+    """ Function to get the list actor name with at least 20 times appearing on different movie.
+    The result actor list is sorted also as decreasing from the most to 20."""
+
+    # target result list
     actor_list_famous = []
    
     cast_list = df['cast'].unique().tolist()
     # print(cast_list)
     
     # list out a list of single actor name
-    print("\n to handle cast list and pick up to a list of single actors ... ")
+    print("\n Pick up to a list of single actors ... ")
     cast_list_single = []
     for item in cast_list:
-        if(item.__contains__('|')):
+        if item.__contains__('|'):
             item_child = item.split('|')
             for ch in item_child:
-                if ('Jr.' == ch):
+                if 'Jr.' == ch:
                     cast_list_single.append('')
-                elif (ch not in cast_list_single):
+                elif ch not in cast_list_single:
                     cast_list_single.append(ch)   
-        elif('Jr.' == item):
+        elif 'Jr.' == item:
             cast_list_single.append('')
         else:
             if item not in cast_list_single: 
                 cast_list_single.append(item)
-    
-    
-    #Get orignal cast list in combined form
-    print("\n to get the orinal casts list in combined-form starting ... \n")
+
+    # Get original cast list in combined form
+    print("\n Get the original casts list in combined-form starting ... \n")
     cast_list_org = []
     for item in cast_list:
-        if(item.__contains__('|')):
+        if item.__contains__('|'):
             item_child = item.split('|')
             cast_list_org.append(item_child)
     # print("to check cast list in original ... \n")
     # print(cast_list_org)
     
-    # to look up most popular actor with at least 20 times apprearing
+    # to look up most popular actor with at least 20 times appearing
     # most_actor20 = {}
     most_actor20 = defaultdict(list)
     act = 0
     
-    print("\nlook up actor starting ... ... ... this take some mins \n")
+    print("\nlooking up actor ...  please wait ... \n")
     for actor in cast_list_single:
         # most_actor20[actor] = []
         for casts in cast_list_org:
-            act +=  casts.count(actor)  
+            act += casts.count(actor)
         most_actor20[actor].append(act)
-        #reset the count var for next actor looking up
-        act=0
+        # reset the count var for next actor looking up
+        act = 0
     
     print("to check result dict for which cast popular ... \n")
     most_actor20_sort = dict(sorted(most_actor20.items(), key=lambda item: item[1], reverse=True))
     
-    #to slice for get a actor list with >= 20 appear
+    # to slice for get a actor list with >= 20 appear
     most_actor20_final = dict(itertools.islice(most_actor20_sort.items(), 374))
-    print(most_actor20_final)
+    # print(most_actor20_final)
     
-    #to get the result list from above dict
+    # to get the result list from above dict
     actor_list_famous = most_actor20_final.keys()
         
     print("\n ********end of getting the famous actor list ************************")
     
     return actor_list_famous
 
-def xxx():
+
+def explore_question2(df, f_cast):
     """2. What kinds of properties are associated with movies that have high revenues?"""
     
-    #select properties to investigate impact to revenues are: `revenue_adj` popularity budget_adj vote_average director cast
-    
+    # select properties to investigate impact to revenues are: `revenue_adj` `popularity` `budget_adj` `director` cast
+
+
+
 def main():
-    """ Mainfuction for setting up the sequence for investigating datasets
-include some steps
+    """ Mainfuction for setting up the sequence for investigating datasets include some steps
     overview dataset ->  
     """
-    
-    #there's some actor name could not display properly character
+
+
+    # there's some actor name could not display properly character
     df_movie=pd.read_csv('./../../Prj2_Investigate_dataset/movie_data_sets/tmdb-movies.csv', encoding = "ISO-8859-1")
     
-    #to see the overview of dframe
+    # to see the overview of dframe
     overview_df(df_movie)
     
-    #implement datacleaning to get a dataframe after cleaned.
+    # implement datacleaning to get a dataframe after cleaned.
     df_cleaned = data_cleaning(df_movie)
     
     # to get a list of sigle-form genres
     genres_single = df_single_genres(df_cleaned)
-    print("to see genres by sigle ... \n")
+    print("to see genres by single ... \n")
     print(genres_single)
     
-    #OK
-    #exploring the first question about the movies' popularity by genres 
-    # df_explore_byGenres(df_cleanedgenres_single)
+    # OK question 1
+    # exploring the first question about the movies' popularity by genres
+    # df_explore_bygenres(df_cleaned, genres_single)
+
+    # this below list contain the most-appear actor in movies, the less index the more famous
+    famous_casts = df_single_cast(df_cleaned)
+    # print(famous_casts)
     
-    cast_single_list = df_single_cast(df_cleaned)
-    # print(cast_single_list)
+    print("to see number most famous actor and the list ... \n")
+    # print(len(famous_casts))
+    # print(famous_casts)
     
-    print("to see number most famoust actor and the list ... \n")
-    print(len(cast_single_list))
-    
-    print(cast_single_list)
+    # start to explore data for answer question2
+    # use the above famous_casts for serving more this question2
+    # drop dont care columns prior to exploring about which impacts to revenue
+    df_cleaned.drop(['imdb_id', 'original_title', 'runtime', 'vote_count', 'revenue', 'budget'], axis=1, inplace=True)
+    # print(df_cleaned.head(30))
+    # overview again the df after more drops
+    overview_df(df_cleaned)
 
 
 if __name__ == "__main__":
