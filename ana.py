@@ -226,7 +226,7 @@ include some steps
     """
     
     #there's some actor name could not display properly character
-    df_movie=pd.read_csv('./movie_data_sets/tmdb-movies.csv', encoding = "ISO-8859-1")
+    df_movie=pd.read_csv('./../../Prj2_Investigate_dataset/movie_data_sets/tmdb-movies.csv', encoding = "ISO-8859-1")
     
     #to see the overview of dframe
     overview_df(df_movie)
