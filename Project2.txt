@@ -1,6 +1,16 @@
 
-Step1: Choose dataset
-Step2: Get organized
-Step3: Analyze the Data
-Step4: Share the finding
+Step1: Choose dataset => movie dataset
+Step2: Get organized    => done
+Step3: Analyze the Data => done
+Step4: Share the finding => done
 Step5: Review
+
+
+referrence source:
+
+https://pandas.pydata.org/docs/reference/api
+https://matplotlib.org/2.0.2/api/
+https://realpython.com/sort-python-dictionary/
+https://datascience.stackexchange.com/questions/52613magentawhat-does-pandas-describe-percentiles-values-tell-about-our-data#:~:text=It%20describes%20the%20distribution%20of,your%20data%20is%20right%20skewed.
+
+
