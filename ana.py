@@ -280,7 +280,7 @@ def main():
     print("\n Finished observing for Question1.")
 
     print("\nPreparing handle actor data for Answer Question2 ...")
-    # this below dict contain the most-appear actor in movies, the apprearing will be used later for estimate success movie
+    # to get a dict save famous-level of casts get involved in a specific movie
     famous_casts = df_single_cast(df_cleaned)
     # print(famous_casts)
     print("\nFinished handling actor data ... ")
@@ -288,8 +288,7 @@ def main():
     # print("to see number most famous actor and the list ... \n")
     # print(len(famous_casts))
     # print(famous_casts)
-    
-    # Answer Question2
+
     print("\n ******************* Answer Question2 ***********************")
     # drop don't care columns prior to exploring about which impacts to revenue
     df_cleaned.drop(['imdb_id', 'original_title', 'runtime', 'vote_count', 'revenue', 'budget'], axis=1, inplace=True)
@@ -297,6 +296,7 @@ def main():
     # overview again the df after more drops
     # overview_df(df_cleaned)
 
+    # Answer Question2
     explore_question2(df_cleaned, famous_casts)
     print("\nEND_OF_APP. Thanks !")
 
