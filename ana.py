@@ -47,8 +47,7 @@ def data_cleaning(df):
     """Implement drop 01 duplicated row
 and some specified columns that have NaN values
     """
-    print("**********************************************")
-    print("starting cleaning data ... \n")
+    print("\nStart cleaning data ... \n")
     df_clean = df.drop_duplicates()
     
     #drop some dont care columns tagline keywords overview homepage
@@ -64,7 +63,8 @@ and some specified columns that have NaN values
     return df_clean
 
 def df_single_genres(df):
-    print("**********************************************")
+    """ Function to get a single genres list on over time, the dataset provided
+    """
 
     print("to see shape of dataset ...")
     print(df.shape)
@@ -78,12 +78,12 @@ def df_single_genres(df):
     print(df.isnull().sum())
     print()
    
-    #see deep-inside the genres ... 
+    # see deep-inside the genres ...
     print("to check unique values in each column ...")
     genres_list = df['genres'].unique().tolist()
     print(type(genres_list))
     
-    #to get only list of single genre in `genres` column
+    # get only list of single genre in `genres` column
     gen_list_single = []
     for item in genres_list:
         if(item.__contains__('|')):
@@ -94,18 +94,14 @@ def df_single_genres(df):
         else:
             if item not in gen_list_single: 
                 gen_list_single.append(item)
-    
-    # print(gen_list_single)
-    print("\n **********************end of see df after cleaned ************************")
-    
+
     return gen_list_single
 
 
 def df_explore_bygenres(df, genres):
     """ Answer questions 1:
         1. Which genres are most popular from year to year?  
-        by list of single genres
-to check one by one and compute polular genres by year
+        By using list of single genres to check one by one and compute popular genres by year
     """
 
     # Question1:
@@ -115,7 +111,6 @@ to check one by one and compute polular genres by year
     # How many every single genres appear
     release_count = []
     for item in genres:
-        # print(f"to check this genres ...{item}   \n")
         # print(df[df['genres'].str.contains(item)].count())
         # print(df[df['genres'].str.contains(item)].shape[0])
         count = df[df['genres'].str.contains(item)].shape[0]
@@ -140,15 +135,13 @@ to check one by one and compute polular genres by year
     plt.xlabel('Movie genres')
     plt.ylabel('No. of released movied')
     plt.show()
-    
-    print("\n ***********************end of explore by genres ***********************")
 
 
 def df_single_cast(df):
-    """ Function to get the list actor whom is classified by apprearing at least 20 times on different movies.
-    The result actor list is sorted also as decreasing from the most to 20"""
+    """ Function to get a dict of actor (in single-form), who is classified by appearing-time at least 10 times on different movies.
+    The result actor dict is sorted also as decreasing from the most to 10"""
 
-    # target result list
+    # target result list, this list result for debug only
     actor_list_famous = []
    
     cast_list = df['cast'].unique().tolist()
@@ -156,7 +149,7 @@ def df_single_cast(df):
     
     # list out a list of single actor name
     # Note: some actor-name is no meaning when display only "Jr."
-    print("\nPick up to a list of single actors ... ")
+    print("\nPicking up to a list of single actors ... ... ")
     cast_list_single = []
     for item in cast_list:
         if item.__contains__('|'):
@@ -196,54 +189,35 @@ def df_single_cast(df):
         # reset the count var for next actor looking up
         act = 0
     
-    print("to check result dict for which cast popular ... \n")
+    print("\nVerify result dict for which cast popular ... \n")
     most_actor10_sort = dict(sorted(most_actor10.items(), key=lambda item: item[1], reverse=True))
     # print(most_actor10_sort)
     
-    # slice for get a dict of actor with >= 10 appear
+    # slice for get a dict of actor with >= 10 appear, 1077 is the total number actors with 10 times apprears over time
     most_actor10_final = dict(itertools.islice(most_actor10_sort.items(), 1077))
     # print(most_actor10_final)
     
     # to get the result list from above dict
     actor_list_famous = most_actor10_final.keys()
-        
-    print("\n ********end of getting the famous actor list ************************")
-    
+
     # return actor_list_famous
     return most_actor10_final
 
 
 def explore_question2(df, f_cast):
-    """2. What kinds of properties are associated with movies that have high revenues?"""
-    
-    # select properties to investigate impact to revenue_adj are: 'popularity' `vote_average` `budget_adj` f_cast or `director`
+    """Answer Q2: What kinds of properties are associated with movies that have high revenues?"""
 
-    # tempo_close*******************************************************************
-    # build mean() by each target test-feature
-    # print("\ncheck mean() of revenue_adj of each revenue_adj  ... \n")
-    # print(df.describe().revenue_adj)
-    #
-    # print("\ncheck mean() of revenue_adj of each vote_average  ... \n")
-    # print(df.describe().vote_average)
-    #
-    # print("\ncheck mean() of revenue_adj of each budget_adj  ... \n")
-    # print(df.describe().budget_adj)
-
-    # tempo_close*******************************************************************
-
-    # print("\nto see distribution of revenue_adj ... \n")
-    # df['revenue_adj'].plot()
+    # select properties to investigate impact to revenue_adj are: 'popularity' `vote_average` `budget_adj` or "famous-index" of casts
 
     # create a columns by "famous-index" = sum(index of most_actor10),
-    # adding new column with index is number of apprearing on all time, each cell will hold the sum of all actor in current
-    # movie, the higher the more famous
+    # adding new column famous_actors_index for estimate famous-level all casts get involved in a specific movie
 
     # scan by df['cast'], check contain any famous_actors and get the famous_index to fill to `famous_actors_index`
     # To get a list of famous_index given by each cast movie by movie
     famous_index = []
     famous_accum = 0
 
-    print("\nlook up and save the famous index by actors in every single movie ... \n")
+    print("\nlook up and save to the list to estimate famous-casts-level in every single movie ... \n")
     # scan by dict of famous_actor20, and scan row by row of df
     for index, row in df.iterrows():
         for item in f_cast.items():
@@ -255,11 +229,23 @@ def explore_question2(df, f_cast):
         famous_index.append(famous_accum)
         famous_accum = 0
 
-    print("\nfinished getting famous-cast index for every movie")
-    print("\nadding new famous_actors_index by above result")
+    print("\nadding new famous_actors_index by above result ... ")
 
     df.loc[:, 'famous_actors_index'] = famous_index
-    print(df.head())
+    print(df['famous_actors_index'].head(20))
+
+    # build mean() by each target test-feature
+    print("\ncheck mean() of revenue_adj of each revenue_adj  ... \n")
+    print(df.describe().revenue_adj)
+
+    print("\ncheck mean() of revenue_adj of each vote_average  ... \n")
+    print(df.describe().vote_average)
+
+    print("\ncheck mean() of revenue_adj of each budget_adj  ... \n")
+    print(df.describe().budget_adj)
+
+    print("\ncheck mean() of famous_actors_index to estimate famous-level of casts get involved in a movie ... \n")
+    print(df.describe().famous_actors_index)
 
     print("\nplot relationships between some feature vs revenue_adj ... \n")
     df.plot(x='vote_average', y='revenue_adj', kind='scatter', color='red')
@@ -288,20 +274,23 @@ def main():
     print("to see genres by single ... \n")
     print(genres_single)
     
-    # OK question 1
-    # exploring the first question about the movies' popularity by genres
-    # df_explore_bygenres(df_cleaned, genres_single)
+    # Question 1: exploring the first question about the movies' popularity by genres
+    print("\n ******************* Answer Question1 ***********************")
+    df_explore_bygenres(df_cleaned, genres_single)
+    print("\n Finished observing for Question1.")
 
+    print("\nPreparing handle actor data for Answer Question2 ...")
     # this below dict contain the most-appear actor in movies, the apprearing will be used later for estimate success movie
     famous_casts = df_single_cast(df_cleaned)
     # print(famous_casts)
-    
-    print("to see number most famous actor and the list ... \n")
+    print("\nFinished handling actor data ... ")
+
+    # print("to see number most famous actor and the list ... \n")
     # print(len(famous_casts))
     # print(famous_casts)
     
-    # start to explore data for answer question2
-    # use the above famous_casts for serving more this question2
+    # Answer Question2
+    print("\n ******************* Answer Question2 ***********************")
     # drop don't care columns prior to exploring about which impacts to revenue
     df_cleaned.drop(['imdb_id', 'original_title', 'runtime', 'vote_count', 'revenue', 'budget'], axis=1, inplace=True)
     # print(df_cleaned.head(30))
@@ -309,6 +298,8 @@ def main():
     # overview_df(df_cleaned)
 
     explore_question2(df_cleaned, famous_casts)
+    print("\nEND_OF_APP. Thanks !")
+
 
 if __name__ == "__main__":
     main()
