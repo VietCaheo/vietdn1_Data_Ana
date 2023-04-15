@@ -269,7 +269,7 @@ def main():
     # implement datacleaning to get a dataframe after cleaned.
     df_cleaned = data_cleaning(df_movie)
     
-    # to get a list of sigle-form genres
+    # to get a list of single-form genres
     genres_single = df_single_genres(df_cleaned)
     print("to see genres by single ... \n")
     print(genres_single)
